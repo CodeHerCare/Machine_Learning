@@ -1,6 +1,6 @@
 from pipeline.load_data import load_data              
 from pipeline.preprocess import build_preprocessing_pipeline   
-from pipeline.model_train import train_model            
+from pipeline.model_train import train_models            
 from pipeline.evaluate import evaluate_model           
 from sklearn.model_selection import train_test_split  
 
@@ -17,6 +17,8 @@ cat_cols = features.select_dtypes(include="object").columns.tolist()
 
 preprocessor = build_preprocessing_pipeline(num_cols, cat_cols)
 
-model = train_model(preprocessor, X_train, y_train, model_path="models/risk_model.pkl")
+models = train_models(preprocessor, X_train, y_train, model_dir="models")
 
-evaluate_model(model, X_test, y_test)
+for name,model in models.items():
+    print(f'\n Evaluating {name}...')
+    evaluate_model(model, X_test, y_test)

@@ -1,8 +1,10 @@
-import joblib
+from joblib import dump
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.pipeline import Pipeline
+import os
+
 
 def train_models(preprocessor, X_train, y_train, model_dir):
     models = {
@@ -22,10 +24,9 @@ def train_models(preprocessor, X_train, y_train, model_dir):
         ])
 
         clf.fit(X_train, y_train)
-
-        model_path = f'{model_dir}/{name}.joblib'
-        joblib.dump(clf, model_path)  # Save model
-
+        model_path = os.path.join(model_dir, f"{name}.joblib")
+        os.makedirs(model_dir, exist_ok=True)
+        dump(clf, model_path)
         trained_models[name] = clf
 
     return trained_models
